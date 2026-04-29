@@ -10,7 +10,7 @@
 :root { --white:#FFFFFF; --off:#F3F0FF; --dark:#1E1B2E; }
 body {
   font-family:'Nunito',sans-serif;
-  background:transparent;
+  background:var(--off);
   color:var(--dark);
   min-height:100vh;
   overflow-x:hidden;
@@ -23,23 +23,23 @@ body {
   text-align:center;
   overflow:hidden;
   min-height:300px;
-  /* bg from fixed slideshow */
+  background:#1E1B2E;
 }
 .slide-bg {
-  position:fixed;
+  position:absolute;
   inset:0;
   background-size:cover;
   background-position:center;
   opacity:0;
   transition:opacity 2s ease-in-out;
-  z-index:-2;
+  z-index:0;
 }
 .slide-bg.active { opacity:1; }
 .hero-overlay {
-  position:fixed;
+  position:absolute;
   inset:0;
-  background:rgba(10,4,30,0.55);
-  z-index:-1;
+  background:linear-gradient(180deg, rgba(8,4,25,0.72) 0%, rgba(18,4,50,0.58) 40%, rgba(28,4,60,0.85) 100%);
+  z-index:1;
 }
 .notes { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
 .notes span {
@@ -135,9 +135,8 @@ body {
 .tw-card {
   border-radius:20px; padding:28px 28px 22px;
   color:#fff; position:relative; overflow:hidden;
-  box-shadow:0 10px 40px rgba(0,0,0,0.28);
+  box-shadow:0 10px 40px rgba(0,0,0,0.18);
   margin-bottom:20px;
-  backdrop-filter:blur(2px);
 }
 .tw-card.glgc { background:linear-gradient(135deg,#5B21B6,#9D174D); }
 .tw-card.flm  { background:linear-gradient(135deg,#0E7490,#065F46); }
@@ -159,8 +158,8 @@ body {
 .sched-list { display:flex; flex-direction:column; gap:6px; }
 .srow {
   display:grid; grid-template-columns:90px 1fr auto; align-items:center; gap:12px;
-  background:rgba(255,255,255,0.92); border-radius:14px; padding:14px 16px;
-  box-shadow:0 2px 12px rgba(0,0,0,0.10);
+  background:#fff; border-radius:14px; padding:14px 16px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
   transition:all 0.2s; position:relative;
 }
 .srow.clickable { cursor:pointer; }
