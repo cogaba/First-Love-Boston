@@ -10,7 +10,7 @@
 :root { --white:#FFFFFF; --off:#F3F0FF; --dark:#1E1B2E; }
 body {
   font-family:'Nunito',sans-serif;
-  background:var(--off);
+  background:transparent;
   color:var(--dark);
   min-height:100vh;
   overflow-x:hidden;
@@ -23,23 +23,23 @@ body {
   text-align:center;
   overflow:hidden;
   min-height:300px;
-  background:#1E1B2E;
+  /* bg from fixed slideshow */
 }
 .slide-bg {
-  position:absolute;
+  position:fixed;
   inset:0;
   background-size:cover;
   background-position:center;
   opacity:0;
   transition:opacity 2s ease-in-out;
-  z-index:0;
+  z-index:-2;
 }
 .slide-bg.active { opacity:1; }
 .hero-overlay {
-  position:absolute;
+  position:fixed;
   inset:0;
-  background:linear-gradient(180deg, rgba(8,4,25,0.72) 0%, rgba(18,4,50,0.58) 40%, rgba(28,4,60,0.85) 100%);
-  z-index:1;
+  background:rgba(10,4,30,0.55);
+  z-index:-1;
 }
 .notes { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
 .notes span {
@@ -97,6 +97,7 @@ body {
 .slide-dots {
   position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
   display:flex; gap:6px; z-index:4; flex-wrap:wrap; justify-content:center; max-width:240px;
+  /* z-index above fixed bg layers */
 }
 .sdot {
   width:6px; height:6px; border-radius:50%;
@@ -109,6 +110,7 @@ body {
 .tab-bar {
   display:flex; max-width:820px; margin:0 auto; padding:0 12px;
   position:relative; z-index:5; gap:4px; transform:translateY(-8px);
+  /* sits above the full-page bg */
 }
 .tab-btn {
   flex:1; padding:13px 8px 11px; border:none; cursor:pointer;
@@ -124,7 +126,7 @@ body {
 .tab-sub { display:block; font-size:9px; font-weight:600; letter-spacing:1px; text-transform:uppercase; opacity:0.7; margin-top:2px; }
 
 /* ── MAIN ── */
-.main { max-width:820px; margin:0 auto; padding:20px 12px 60px; }
+.main { max-width:820px; margin:0 auto; padding:20px 12px 60px; position:relative; z-index:1; }
 .tab-panel { display:none; animation:panelIn 0.3s ease; }
 .tab-panel.active { display:block; }
 @keyframes panelIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
@@ -133,8 +135,9 @@ body {
 .tw-card {
   border-radius:20px; padding:28px 28px 22px;
   color:#fff; position:relative; overflow:hidden;
-  box-shadow:0 10px 40px rgba(0,0,0,0.18);
+  box-shadow:0 10px 40px rgba(0,0,0,0.28);
   margin-bottom:20px;
+  backdrop-filter:blur(2px);
 }
 .tw-card.glgc { background:linear-gradient(135deg,#5B21B6,#9D174D); }
 .tw-card.flm  { background:linear-gradient(135deg,#0E7490,#065F46); }
@@ -156,8 +159,8 @@ body {
 .sched-list { display:flex; flex-direction:column; gap:6px; }
 .srow {
   display:grid; grid-template-columns:90px 1fr auto; align-items:center; gap:12px;
-  background:#fff; border-radius:14px; padding:14px 16px;
-  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  background:rgba(255,255,255,0.92); border-radius:14px; padding:14px 16px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.10);
   transition:all 0.2s; position:relative;
 }
 .srow.clickable { cursor:pointer; }
@@ -223,10 +226,6 @@ body {
     <div class="church-name">First Love Church &middot; Boston</div>
     <h1>Music <span class="grad">Sonta</span></h1>
     <div class="hero-sub">Weekly Schedule &amp; Resources</div>
-    <button class="refresh-btn" onclick="doRefresh()">
-      <span id="spinIcon">&#x1F504;</span> Refresh
-    </button>
-    <span class="sync-lbl" id="syncLbl">Using embedded data</span>
   </div>
   <div class="slide-dots" id="slideDots"></div>
 </div>
@@ -526,16 +525,6 @@ function switchTab(k) {
   for (var j = 0; j < panels.length; j++) panels[j].classList.toggle('active', panels[j].id === 'p-' + k);
 }
 
-function doRefresh() {
-  var si = document.getElementById('spinIcon');
-  si.style.animation = 'spinA 0.6s linear infinite';
-  document.getElementById('syncLbl').textContent = 'Loading...';
-  setTimeout(function() {
-    si.style.animation = '';
-    var now = new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
-    document.getElementById('syncLbl').textContent = 'Loaded at ' + now;
-  }, 700);
-}
 
 function renderAll() {
   renderBanner('glgc'); renderSched('glgc');
@@ -553,7 +542,6 @@ document.getElementById('waOv').addEventListener('click', function(e) {
 window.addEventListener('DOMContentLoaded', function() {
   initSlideshow();
   renderAll();
-  doRefresh();
 });
 </script>
 </body>
